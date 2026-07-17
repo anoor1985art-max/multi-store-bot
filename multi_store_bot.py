@@ -98,7 +98,9 @@ def send_mall_menu(chat_id, message_id=None):
     
     markup = types.InlineKeyboardMarkup(row_width=1)
     for s_id, s_info in stores.items():
-        markup.add(types.InlineKeyboardButton(f"🏬 {s_info.get('name', 'متجر')}", callback_data=f"open_store|{s_id}"))
+        if not s_info.get("hidden", False) or is_store_admin(chat_id, s_id):
+            status_badge = " 🔒 [مخفي]" if s_info.get("hidden", False) else ""
+            markup.add(types.InlineKeyboardButton(f"🏬 {s_info.get('name', 'متجر')}{status_badge}", callback_data=f"open_store|{s_id}"))
     
     # تحقق مما إذا كان المستخدم مشرفاً لإظهار زر لوحة الإدارة
     is_admin_any = is_super_admin(chat_id)
@@ -131,6 +133,11 @@ def send_store_home(chat_id, store_id, message_id=None):
     store = db.get("stores", {}).get(store_id)
     if not store:
         bot.send_message(chat_id, "❌ عذراً، هذا المتجر لم يعد متاحاً.")
+        send_mall_menu(chat_id)
+        return
+
+    if store.get("hidden", False) and not is_store_admin(chat_id, store_id):
+        bot.send_message(chat_id, "🔒 عذراً، هذا المتجر مغلق مؤقتاً أو مخفي من قبل الإدارة حالياً.")
         send_mall_menu(chat_id)
         return
 
@@ -341,6 +348,8 @@ def send_admin_store_panel(chat_id, store_id, message_id=None):
         types.InlineKeyboardButton("📊 إحصائيات وطلبات", callback_data=f"admin_stats|{store_id}"),
         types.InlineKeyboardButton("⚙️ إعدادات المتجر", callback_data=f"admin_settings|{store_id}")
     )
+    hide_btn_text = "🟢 إظهار المتجر للزبائن" if store.get("hidden", False) else "👁️ إخفاء المتجر عن الزبائن"
+    markup.add(types.InlineKeyboardButton(hide_btn_text, callback_data=f"toggle_hide|{store_id}"))
     markup.add(
         types.InlineKeyboardButton("🔙 العودة لقائمة المتاجر", callback_data="admin_main"),
         types.InlineKeyboardButton("🏠 دخول المتجر كزبون", callback_data=f"open_store|{store_id}")
@@ -428,6 +437,18 @@ if bot:
         elif data.startswith("admin_store|"):
             store_id = data.split("|")[1]
             send_admin_store_panel(chat_id, store_id, msg_id)
+
+        elif data.startswith("toggle_hide|"):
+            store_id = data.split("|")[1]
+            if is_store_admin(chat_id, store_id):
+                db = load_db()
+                if store_id in db.get("stores", {}):
+                    current_hidden = db["stores"][store_id].get("hidden", False)
+                    db["stores"][store_id]["hidden"] = not current_hidden
+                    save_db(db)
+                    status_text = "🔒 تم إخفاء المتجر عن رؤية الزبائن بنجاح!" if not current_hidden else "🟢 تم إظهار المتجر وأصبح متاحاً للزبائن الآن!"
+                    bot.answer_callback_query(call.id, status_text, show_alert=True)
+                    send_admin_store_panel(chat_id, store_id, msg_id)
 
         elif data.startswith("admin_cats|"):
             store_id = data.split("|")[1]
