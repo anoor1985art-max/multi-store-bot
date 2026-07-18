@@ -2,38 +2,82 @@
   "stores": {
     "physical_store": {
       "id": "physical_store",
-      "name": "📦 متجر المنتجات الملموسة والتوصيل",
-      "desc": "تسوق أحدث المنتجات والسلع الملموسة مع التوصيل السريع لباب منزلك",
+      "name": "🛍️ متجر الأزياء والمنتجات المنزلية",
+      "desc": "تسوق أحدث الملابس والسلع الملموسة والهدايا مع التوصيل السريع لباب منزلك",
       "admin_id": "",
+      "sector": "shopping",
       "categories": {
         "cat_phys_1": "👗 أزياء وملابس وموضة",
         "cat_phys_2": "🎁 عطور وهدايا فاخرة",
-        "cat_phys_3": "🏡 مستلزمات وديكور المنزل"
+        "cat_phys_3": "🏡 مستلزمات وديكور المنزل",
+        "cat_7d2f78": "متجر امازون كربلاء للبضائع الاوربية"
       },
       "products": {
         "prod_phys_1": {
           "id": "prod_phys_1",
           "category_id": "cat_phys_1",
           "name": "قميص قطني فاخر وبنطال جينز",
-          "price": 45.0,
-          "desc": "طقم ملابس كاجوال مصنوع من القطن العضوي 100% متوفر بجميع المقاسات.",
-          "image": ""
+          "price": 35000,
+          "desc": "طقم ملابس كاجوال مصنوع من القطن العضوي 100% متوفر بجميع المقاسات والألوان.",
+          "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80"
         },
         "prod_phys_2": {
           "id": "prod_phys_2",
           "category_id": "cat_phys_2",
           "name": "عطر عود ملكي أصلي 100 مل",
-          "price": 80.0,
-          "desc": "عطر شرقي فاخر بثبات عالي يدوم لأكثر من 48 ساعة ومناسب للمناسبات.",
-          "image": ""
+          "price": 65000,
+          "desc": "عطر شرقي فاخر بثبات عالي يدوم لأكثر من 48 ساعة ومناسب للمناسبات الخاصة واليومية.",
+          "image": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_phys_3": {
+          "id": "prod_phys_3",
+          "category_id": "cat_phys_1",
+          "name": "جاكيت شتوي فاخر مبطن فرو",
+          "price": 48000,
+          "desc": "معطف شتوي ثقيل عازل للماء والهواء مع تبطين فرو داخلي ناعم ودافئ جداً.",
+          "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_phys_4": {
+          "id": "prod_phys_4",
+          "category_id": "cat_phys_1",
+          "name": "فستان سهرة كلاسيكي حرير",
+          "price": 55000,
+          "desc": "فستان نسائي أنيق مصنوع من الحرير الطبيعي بتصميم عصري يناسب كافة السهرات الحصرية.",
+          "image": "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_phys_5": {
+          "id": "prod_phys_5",
+          "category_id": "cat_phys_3",
+          "name": "طقم مزهريات سيراميك وديكور منزلي",
+          "price": 28000,
+          "desc": "مجموعة ديكورية مودرن تتكون من 3 قطع سيراميك فاخرة لإضفاء لمسة جمالية على غرفة المعيشة.",
+          "image": "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_phys_6": {
+          "id": "prod_phys_6",
+          "category_id": "cat_phys_3",
+          "name": "مصباح طاولة LED ذكي للديكور",
+          "price": 22000,
+          "desc": "إضاءة ليلية دافئة قابلة لتعديل الألوان والسطوع باللمس، مناسبة للمكتب وغرفة النوم.",
+          "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_bd34fd": {
+          "id": "prod_bd34fd",
+          "category_id": "cat_7d2f78",
+          "name": "كيبورد RGB كيمنك احترافي",
+          "price": 25000,
+          "desc": "امازون مو صيني أصلي\nميكانيكي مع إضاءة خلفية قابلة للتخصيص وأزرار سريعة الاستجابة.",
+          "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&auto=format&fit=crop&q=80"
         }
-      }
+      },
+      "hidden": false
     },
     "electronics_store": {
       "id": "electronics_store",
       "name": "💻 متجر الإلكترونيات والأجهزة الذكية",
-      "desc": "أحدث الهواتف الذكية، الحواسيب، والإكسسوارات مع ضمان ذهبي وكفالة حقيقية",
+      "desc": "أحدث الهواتف الذكية، الحواسيب، والإكسسوارات مع ضمان ذهبي وكفالة حقيقية من الوكيل",
       "admin_id": "",
+      "sector": "shopping",
       "categories": {
         "cat_elec_1": "📱 هواتف ذكية وأجهزة لوحية",
         "cat_elec_2": "💻 حواسيب ولابتوبات",
@@ -44,49 +88,311 @@
           "id": "prod_elec_1",
           "category_id": "cat_elec_1",
           "name": "هاتف iPhone 16 Pro Max 256GB",
-          "price": 1199.0,
+          "price": 1750000,
           "desc": "النسخة الأحدث بشريحة A18 Pro مع كاميرا فائقة الدقة وضمان وكيل سنة كاملة.",
-          "image": ""
+          "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&auto=format&fit=crop&q=80"
         },
         "prod_elec_2": {
           "id": "prod_elec_2",
           "category_id": "cat_elec_3",
           "name": "سماعة عزل ضوضاء AirPods Pro 2",
-          "price": 249.0,
+          "price": 320000,
           "desc": "سماعة لاسلكية بخاصية العزل النشط مع علبة شحن MagSafe ومنفذ Type-C.",
-          "image": ""
+          "image": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_elec_3": {
+          "id": "prod_elec_3",
+          "category_id": "cat_elec_1",
+          "name": "هاتف Samsung Galaxy S24 Ultra",
+          "price": 1550000,
+          "desc": "شاشة Dynamic AMOLED 2X مع قلم S-Pen مدمج وكاميرا 200 ميجابكسل مع تقنيات الذكاء الاصطناعي Galaxy AI.",
+          "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_elec_4": {
+          "id": "prod_elec_4",
+          "category_id": "cat_elec_2",
+          "name": "لابتوب MacBook Pro M3 Max 16-inch",
+          "price": 3400000,
+          "desc": "أقوى حاسوب محمول للمحترفين والمبرمجين والمصممين مع شريحة M3 Max وشاشة Liquid Retina XDR.",
+          "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_elec_5": {
+          "id": "prod_elec_5",
+          "category_id": "cat_elec_1",
+          "name": "جهاز آيباد برو iPad Pro M4 شاشة OLED",
+          "price": 1450000,
+          "desc": "أنحف وأقوى جهاز لوحي بشريحة Apple M4 الفائقة وشاشة Ultra Retina XDR المذهلة.",
+          "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_elec_6": {
+          "id": "prod_elec_6",
+          "category_id": "cat_elec_3",
+          "name": "ساعة ذكية Apple Watch Ultra 2",
+          "price": 1100000,
+          "desc": "ساعة المغامرات والرياضات الشاقة بهيكل تيتانيوم صلب بطارية تدوم أيام وشاشة شديدة السطوع.",
+          "image": "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=600&auto=format&fit=crop&q=80"
         }
-      }
+      },
+      "hidden": false
     },
     "food_store": {
       "id": "food_store",
-      "name": "🍔 متجر الطعام والكافية (المطعم والمقهى)",
-      "desc": "أشهى الوجبات السريعة والمشاوي والمشروبات الساخنة والباردة مع خدمة التوصيل الساخن",
+      "name": "🍔 المطاعم والوجبات السريعة",
+      "desc": "أشهى الوجبات السريعة والمشاوي والأطباق الشرقية والغربية مع خدمة التوصيل الساخن",
       "admin_id": "",
       "categories": {
-        "cat_food_1": "🍔 وجبات سريعة ومشاوي",
-        "cat_food_2": "☕ قهوة ومشروبات الكافية",
-        "cat_food_3": "🍰 حلويات ومخبوزات طازجة"
+        "cat_oriental": "🍲 أكلات شرقية",
+        "cat_western": "🍕 أكلات غربية",
+        "cat_appetizers": "🥗 مقبلات متنوعة"
       },
       "products": {
+        "prod_oriental_1": {
+          "id": "prod_oriental_1",
+          "category_id": "cat_oriental",
+          "name": "دولمة بغدادية مشكلة فاخرة",
+          "price": 15000,
+          "desc": "تشكيلة ورق عنب وكوسا وباذنجان وبصل محشية بالرز واللحم المفروم الطازج مع الريش والتوابل العراقية الأصيلة.",
+          "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_bc3a4f": {
+          "id": "prod_bc3a4f",
+          "category_id": "cat_oriental",
+          "name": "صاج دجاج عراقي",
+          "price": 5250,
+          "desc": "خبز الصاج الطازج مع شاورما دجاج متبلة بالبهارات الخاصة، بطاطس مقرمشة، مخلل، وصلصة الثومية.",
+          "image": "AgACAgIAAxkBAANualq0_2PcDW1Bk3MOk79-7zdHFCEAAt4aaxumcNlKS8GiEgGDQ3kBAAMCAAN5AAM9BA"
+        },
+        "prod_oriental_3": {
+          "id": "prod_oriental_3",
+          "category_id": "cat_oriental",
+          "name": "كباب عراقي مشوي على الفحم (نفر 4 أسياخ)",
+          "price": 12000,
+          "desc": "4 أسياخ كباب لحم غنم طازج مشوي على الفحم مع خبز التنور الحار، طماطم بصل مشوي، وسماق.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_oriental_4": {
+          "id": "prod_oriental_4",
+          "category_id": "cat_oriental",
+          "name": "قوزي لحم غنم على الرز (تمن ولحم)",
+          "price": 18000,
+          "desc": "قطعة فخذ غنم طرية ومحمرة مع رز برياني باللوز والزبيب، تقدم مع مرق البامية أو الفاصوليا الساخنة.",
+          "image": "https://images.unsplash.com/photo-1633948273053-c4193be5418a?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_oriental_5": {
+          "id": "prod_oriental_5",
+          "category_id": "cat_oriental",
+          "name": "مسكوف عراقي مشوي على الحطب",
+          "price": 25000,
+          "desc": "سمك كربان نهري طازج مشوي بالطريقة البغدادية على نار الحطب، متبل بالتمر الهندي والليمون مع خبز وسلطة.",
+          "image": "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80"
+        },
         "prod_food_1": {
           "id": "prod_food_1",
-          "category_id": "cat_food_1",
-          "name": "وجبة برجر لحم واغيو مع بطاطس ومشروب",
-          "price": 14.5,
-          "desc": "لحم واغيو مشوي على الفحم مع جبنة شيدر وصوص خاص وبطاطس مقرمشة.",
-          "image": ""
+          "category_id": "cat_western",
+          "name": "برجر لحم واغيو كلاسيك",
+          "price": 7500,
+          "desc": "لحم عراقي خالص 100% مشوي على الفحم مع جبنة شيدر وصوص خاص وبطاطس مقرمشة.",
+          "image": "AgACAgIAAxkBAAM9alo-lazj_QABRNoLu4hwIFz2rrAtAAJUGGsbpnDZShCTRQS46dRBAQADAgADeQADPQQ"
         },
-        "prod_food_2": {
-          "id": "prod_food_2",
-          "category_id": "cat_food_2",
-          "name": "آيس سبانيش لاتيه مع كراميل",
-          "price": 5.5,
-          "desc": "قهوة مختصة باردة مع حليب مكثف ونكهة الكراميل الفاخرة.",
-          "image": ""
+        "prod_pizza_1": {
+          "id": "prod_pizza_1",
+          "category_id": "cat_western",
+          "name": "بيتزا ببروني إيطالية بالجبن المزدوج",
+          "price": 10000,
+          "desc": "بيتزا مخبوزة بفرن الحطب مع جبن الموزاريلا الفاخر وشرائح الببروني الحارة وأوراق الريحان.",
+          "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_western_3": {
+          "id": "prod_western_3",
+          "category_id": "cat_western",
+          "name": "ستيك ريب آي مشوي مع صوص الفطر",
+          "price": 22000,
+          "desc": "شريحة لحم ريب آي أنغوس مشوية بدرجة استواء مثالية، تقدم مع صوص الفطر الكريمي وخضار سوتيه وبطاطس مهروسة.",
+          "image": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_western_4": {
+          "id": "prod_western_4",
+          "category_id": "cat_western",
+          "name": "باستا فوتشيني ألفريدو بالدجاج والفطر",
+          "price": 9000,
+          "desc": "معكرونة فوتشيني إيطالية مع صدر دجاج مشوي وصوص الألفريدو الغني بجبنة البارميزان والفطر الطازج.",
+          "image": "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_western_5": {
+          "id": "prod_western_5",
+          "category_id": "cat_western",
+          "name": "كرسبي تشيكن زنجر سوبر سوبريم",
+          "price": 6500,
+          "desc": "صدور دجاج مقرمشة وحارة مع خس، جبنة شيدر سائبة، مايونيز مدخن في صمون بريوش طازج مع بطاطس.",
+          "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_app_1": {
+          "id": "prod_app_1",
+          "category_id": "cat_appetizers",
+          "name": "صحن مقبلات شرقية مشكل (حجم عائلي)",
+          "price": 6000,
+          "desc": "صحن مقبلات باردة مشكل يتضمن حمص بطحينة، بابا غنوج، متبل، وتبولة طازجة مع زيت الزيتون ومرشات الرمان.",
+          "image": "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_app_2": {
+          "id": "prod_app_2",
+          "category_id": "cat_appetizers",
+          "name": "سلطة سيزر بالدجاج المشوي والبارميزان",
+          "price": 7500,
+          "desc": "خس روماني مقرمش وقطع صدر الدجاج المشوي مع رقائق جبنة البارميزان وقطع التوست المحمصة وصلصة السيزر.",
+          "image": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_app_3": {
+          "id": "prod_app_3",
+          "category_id": "cat_appetizers",
+          "name": "تبولة بالبرغل والنعناع والليمون",
+          "price": 4000,
+          "desc": "بقدونس طازج مفروم ناعماً مع طماطم، نعناع، برغل ناعم، متبل بعصير الليمون الطبيعي وزيت الزيتون البكر.",
+          "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_app_4": {
+          "id": "prod_app_4",
+          "category_id": "cat_appetizers",
+          "name": "بطاطس ودجز مقرمشة مع غموس الجبن الذائب",
+          "price": 4500,
+          "desc": "بطاطس ودجز مشوية ومقرمشة متبلة بالأعشاب الإيطالية تقدم مع غموس صوص الجبن الذائب الحار.",
+          "image": "https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_app_5": {
+          "id": "prod_app_5",
+          "category_id": "cat_appetizers",
+          "name": "شوربة عدس بالكمون والليمون (ساخنة)",
+          "price": 3000,
+          "desc": "شوربة عدس أصفر غنية محمرة مع البصل والكمون وقطع الخبز المحمص وشرائح الليمون.",
+          "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80"
         }
       }
+    },
+    "cafe_store": {
+      "id": "cafe_store",
+      "name": "☕ الكافيهات والمشروبات والحلويات",
+      "desc": "أجود أنواع القهوة المختصة، المشروبات الباردة والساخنة، والحلويات والمخبوزات الطازجة",
+      "admin_id": "",
+      "sector": "cafe",
+      "categories": {
+        "cat_cafe_1": "☕ قهوة مختصة ومشروبات ساخنة",
+        "cat_cafe_2": "🧋 مشروبات باردة وآيس لاتيه",
+        "cat_cafe_3": "🍰 حلويات وكيك ومخبوزات طازجة"
+      },
+      "products": {
+        "prod_food_2": {
+          "id": "prod_food_2",
+          "category_id": "cat_cafe_2",
+          "name": "آيس سبانيش لاتيه مع كراميل",
+          "price": 4500,
+          "desc": "قهوة مختصة باردة مع حليب مكثف ونكهة الكراميل الفاخرة ومكعبات الثلج المنعشة.",
+          "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_1": {
+          "id": "prod_cafe_1",
+          "category_id": "cat_cafe_1",
+          "name": "كابتشينو كلاسيك غني بالرغوة",
+          "price": 3500,
+          "desc": "إسبريسو غني محضر بحبات بن أرابيكا الفاخرة مع رغوة الحليب الطازج ورشة كاكاو.",
+          "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_2": {
+          "id": "prod_cafe_2",
+          "category_id": "cat_cafe_3",
+          "name": "تشيز كيك بالتوت البري طازج",
+          "price": 5000,
+          "desc": "قطعة تشيز كيك مخبوزة على الطريقة الكلاسيكية مغطاة بصوص التوت الطازج اللذيذ.",
+          "image": "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_3": {
+          "id": "prod_cafe_3",
+          "category_id": "cat_cafe_1",
+          "name": "قهوة V60 مختصة إثيوبية",
+          "price": 4500,
+          "desc": "قهوة مقطرة بعناية بنكهات الفواكه والحمضيات الطبيعية، محضرة بأداة V60 الشهيرة.",
+          "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_4": {
+          "id": "prod_cafe_4",
+          "category_id": "cat_cafe_2",
+          "name": "آيس ماتشا لاتيه الياباني الفاخر",
+          "price": 5500,
+          "desc": "مسحوق شاي الماتشا الأخضر الياباني الفاخر مخفوق مع الحليب الطازج ومكعبات الثلج.",
+          "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_5": {
+          "id": "prod_cafe_5",
+          "category_id": "cat_cafe_3",
+          "name": "كيكة مولتن شوكولاتة مع الآيس كريم",
+          "price": 6500,
+          "desc": "كيكة شوكولاتة دافئة مع قلب غني وصوص شوكولاتة ذائب، تقدم مع كرة آيس كريم فانيليا.",
+          "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_6": {
+          "id": "prod_cafe_6",
+          "category_id": "cat_cafe_3",
+          "name": "كرواسون بالفستق الحلبي والشوكولاتة",
+          "price": 4000,
+          "desc": "كرواسون فرنسي هش ومقرمش مخبوز طازجاً، محشو بكريمة الفستق الحلبي الفاخرة ومغطى بالمكسرات.",
+          "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop&q=80"
+        },
+        "prod_cafe_7": {
+          "id": "prod_cafe_7",
+          "category_id": "cat_cafe_2",
+          "name": "موهيتو فراولة ورمان منعش",
+          "price": 4000,
+          "desc": "مشروب غازي منعش مع قطع الفراولة الطازجة وأوراق النعناع وشرائح الليمون وحبات الرمان.",
+          "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80"
+        }
+      },
+      "hidden": false
     }
   },
-  "orders": {}
+  "orders": {
+    "f09f4178": {
+      "id": "f09f4178",
+      "store_id": "physical_store",
+      "chat_id": 579835894,
+      "customer_name": "انور ابراهيم مالك",
+      "customer_phone": "07715914959",
+      "address": "📍 موقع GPS: https://maps.google.com/?q=32.548164,44.237712",
+      "items": {
+        "prod_bd34fd": 1
+      },
+      "total": 35.0,
+      "status": "pending",
+      "time": "2026-07-17 16:43:21"
+    },
+    "d51b6303": {
+      "id": "d51b6303",
+      "store_id": "food_store",
+      "chat_id": 579835894,
+      "customer_name": "زبون الصالة (🍽️ صالة (طاولة رقم 3))",
+      "customer_phone": "داخل الصالة",
+      "address": "🍽️ صالة (طاولة رقم 3)",
+      "order_type": "🍽️ صالة (طاولة رقم 3)",
+      "items": {
+        "prod_food_1": 1
+      },
+      "total": 7500,
+      "status": "pending",
+      "time": "2026-07-17 20:04:47"
+    },
+    "ef001075": {
+      "id": "ef001075",
+      "store_id": "food_store",
+      "chat_id": 579835894,
+      "customer_name": "انور",
+      "customer_phone": "077",
+      "address": "كربلاء",
+      "order_type": "🛍️ سفري (توصيل/خارجي)",
+      "payment_method": "💵 الدفع نقداً (عند الاستلام / في الصالة)",
+      "items": {
+        "prod_western_5": 1
+      },
+      "total": 6500,
+      "status": "pending",
+      "time": "2026-07-18 02:57:16"
+    }
+  }
 }
