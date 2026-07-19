@@ -2307,6 +2307,35 @@ if bot:
         chat_id = message.chat.id
         register_user(chat_id)
         clear_user_state(chat_id)
+        
+        # Check if there is a start parameter (e.g., from QR barcode scan like t.me/bot?start=table_5)
+        parts = message.text.split()
+        if len(parts) > 1:
+            param = parts[1]
+            table_num = None
+            if "table_" in param:
+                table_num = param.split("table_")[-1]
+            elif "table" in param:
+                table_num = "".join(filter(str.isdigit, param))
+                
+            if table_num:
+                store_id = "cafe_store"
+                order_type_val = f"🍽️ صالة (طاولة رقم {table_num})"
+                set_user_order_type(chat_id, store_id, order_type_val)
+                
+                db = load_db()
+                store_name = db.get("stores", {}).get(store_id, {}).get("name", "الكوفيات")
+                
+                welcome_msg = (
+                    f"❤️ <b>اهلا وسهلا بيك عيوني انت في كوفي «{store_name}»</b> ✨\n\n"
+                    f"🛋️ لقد جلست في <b>طاولة رقم ({table_num})</b>.\n"
+                    f"لقد قمنا بتحديد طاولتك تلقائياً للطلب داخل الصالة.\n\n"
+                    f"👇 يمكنك البدء بتصفح الأقسام والطلب مباشرة:"
+                )
+                bot.send_message(chat_id, welcome_msg)
+                send_store_home(chat_id, store_id)
+                return
+                
         send_mall_menu(chat_id)
 
     @bot.message_handler(commands=['id', 'myid'])
