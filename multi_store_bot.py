@@ -50,15 +50,11 @@ bot = telebot.TeleBot(TOKEN, parse_mode="HTML") if TOKEN and TOKEN != "YOUR_BOT_
 DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.json")
 db_lock = threading.Lock()
 
+from store_db_handler import load_db as sqlite_load_db, save_db as sqlite_save_db
+
 def load_db():
     with db_lock:
-        if os.path.exists(DB_FILE):
-            try:
-                with open(DB_FILE, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception as e:
-                print(f"[Error loading DB]: {e}")
-        return {"stores": {}, "orders": {}}
+        return sqlite_load_db()
 
 def register_user(chat_id):
     try:
@@ -73,8 +69,7 @@ def register_user(chat_id):
 
 def save_db(data):
     with db_lock:
-        with open(DB_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        sqlite_save_db(data)
 
 def format_price(amount):
     try:
@@ -2012,17 +2007,223 @@ if bot:
             db = load_db()
             store = db.get("stores", {}).get(store_id, {})
             orders = [o for o in db.get("orders", {}).values() if o.get("store_id") == store_id]
-            total_rev = sum(o.get("total", 0) for o in orders if o.get("status") == "delivered")
+            
+            completed_orders = [o for o in orders if o.get("status") == "delivered"]
+            total_rev = sum(o.get("total", 0) for o in completed_orders)
+            
+            pending_cnt = len([o for o in orders if o.get("status") == "pending"])
+            accepted_cnt = len([o for o in orders if o.get("status") == "accepted"])
+            delivered_cnt = len(completed_orders)
+            cancelled_cnt = len([o for o in orders if o.get("status") in ["cancelled", "rejected"]])
+            
+            # Average order value
+            aov = (total_rev / len(completed_orders)) if completed_orders else 0
+            
+            # Periodic sales
+            import datetime
+            now = datetime.datetime.now()
+            today_str = now.strftime("%Y-%m-%d")
+            
+            sales_today = 0
+            sales_week = 0
+            sales_month = 0
+            
+            for o in completed_orders:
+                o_time_str = o.get("time", "")
+                try:
+                    o_time = datetime.datetime.strptime(o_time_str, "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    o_time = now
+                
+                # Check periods
+                diff = now - o_time
+                if o_time_str.startswith(today_str):
+                    sales_today += o.get("total", 0)
+                if diff.days < 7:
+                    sales_week += o.get("total", 0)
+                if diff.days < 30:
+                    sales_month += o.get("total", 0)
+            
+            # Top-selling products
+            product_sales = {}
+            for o in completed_orders:
+                for pid, qty in o.get("items", {}).items():
+                    product_sales[pid] = product_sales.get(pid, 0) + qty
+                    
+            sorted_prods = sorted(product_sales.items(), key=lambda x: x[1], reverse=True)
+            top_selling = []
+            for pid, qty in sorted_prods[:3]:
+                prod_name = store.get("products", {}).get(pid, {}).get("name", f"منتج #{pid}")
+                top_selling.append(f"▪️ {prod_name}: تم بيع ({qty})")
+                
+            top_selling_text = "\n".join(top_selling) if top_selling else "لا توجد مبيعات منتجات بعد."
+            
             text = (
-                f"📊 <b>إحصائيات المبيعات: {store.get('name')}</b>\n"
+                f"📊 <b>التقرير الإحصائي وإدارة المبيعات: {store.get('name')}</b>\n"
                 f"━━━━━━━━━━━━━━━━━━\n"
-                f"📦 إجمالي الطلبات المستلمة: {len(orders)}\n"
-                f"💰 إجمالي الإيرادات المحققة: <code>{total_rev}$</code>\n"
+                f"💰 <b>إجمالي الإيرادات (المكتملة):</b> <code>{format_price(total_rev)}</code>\n"
+                f"📦 <b>إجمالي الطلبات المستلمة:</b> {len(orders)} طلب\n"
+                f"⚖️ <b>متوسط قيمة الطلب الواحد:</b> <code>{format_price(aov)}</code>\n"
+                f"━━━━━━━━━━━━━━━━━━\n"
+                f"⏳ قيد الانتظار: <b>{pending_cnt}</b> | ✅ مقبول وتجهيز: <b>{accepted_cnt}</b>\n"
+                f"🚗 تم التوصيل: <b>{delivered_cnt}</b> | ❌ مرفوض وملغي: <b>{cancelled_cnt}</b>\n"
+                f"━━━━━━━━━━━━━━━━━━\n"
+                f"📅 <b>مبيعات اليوم:</b> <code>{format_price(sales_today)}</code>\n"
+                f"📅 <b>مبيعات آخر 7 أيام:</b> <code>{format_price(sales_week)}</code>\n"
+                f"📅 <b>مبيعات آخر 30 يوماً:</b> <code>{format_price(sales_month)}</code>\n"
+                f"━━━━━━━━━━━━━━━━━━\n"
+                f"🔥 <b>الأكثر مبيعاً:</b>\n{top_selling_text}\n"
                 f"━━━━━━━━━━━━━━━━━━\n"
             )
-            markup = types.InlineKeyboardMarkup()
+            
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            markup.add(
+                types.InlineKeyboardButton("📋 الطلبات النشطة", callback_data=f"admin_manage_orders|{store_id}|0"),
+                types.InlineKeyboardButton("📥 تصدير ملف المبيعات", callback_data=f"export_sales_csv|{store_id}")
+            )
             markup.add(types.InlineKeyboardButton("🔙 العودة لإدارة المتجر", callback_data=f"admin_store|{store_id}"))
             bot.edit_message_text(text, chat_id=chat_id, message_id=msg_id, reply_markup=markup)
+
+        elif data.startswith("admin_manage_orders|"):
+            parts = data.split("|")
+            store_id = parts[1]
+            page = int(parts[2])
+            db = load_db()
+            store = db.get("stores", {}).get(store_id, {})
+            orders = [o for o in db.get("orders", {}).values() if o.get("store_id") == store_id and o.get("status") in ["pending", "accepted"]]
+            orders = sorted(orders, key=lambda x: x.get("time", ""), reverse=True)
+            
+            per_page = 5
+            total_pages = (len(orders) + per_page - 1) // per_page if orders else 1
+            page = max(0, min(page, total_pages - 1))
+            page_orders = orders[page * per_page : (page + 1) * per_page]
+            
+            markup = types.InlineKeyboardMarkup(row_width=1)
+            for o in page_orders:
+                o_id = o['id']
+                stat_lbl = "⏳ قيد الانتظار" if o['status'] == 'pending' else "✅ قيد التجهيز"
+                btn_txt = f"📦 #{o_id} - {o['customer_name']} ({format_price(o['total'])}) [{stat_lbl}]"
+                markup.add(types.InlineKeyboardButton(btn_txt, callback_data=f"admin_order_det|{store_id}|{o_id}"))
+                
+            nav_buttons = []
+            if page > 0:
+                nav_buttons.append(types.InlineKeyboardButton("⬅️ السابق", callback_data=f"admin_manage_orders|{store_id}|{page-1}"))
+            if page < total_pages - 1:
+                nav_buttons.append(types.InlineKeyboardButton("التالي ➡️", callback_data=f"admin_manage_orders|{store_id}|{page+1}"))
+            if nav_buttons:
+                markup.row(*nav_buttons)
+                
+            markup.add(
+                types.InlineKeyboardButton("🔄 تحديث القائمة", callback_data=f"admin_manage_orders|{store_id}|{page}"),
+                types.InlineKeyboardButton("🔙 العودة للإحصائيات", callback_data=f"admin_stats|{store_id}")
+            )
+            
+            text = (
+                f"📋 <b>إدارة الطلبات النشطة: {store.get('name')}</b>\n"
+                f"الصحفة: {page+1} من {total_pages}\n\n"
+                f"اضغط على أي طلب من القائمة أدناه لاستعراض كامل تفاصيله، أو قبوله وتغيير حالته:"
+            )
+            bot.edit_message_text(text, chat_id=chat_id, message_id=msg_id, reply_markup=markup)
+
+        elif data.startswith("admin_order_det|"):
+            _, store_id, order_id = data.split("|")
+            db = load_db()
+            order = db.get("orders", {}).get(order_id)
+            if not order:
+                bot.answer_callback_query(call.id, "❌ الطلب غير موجود.", show_alert=True)
+                return
+            
+            store = db.get("stores", {}).get(store_id, {})
+            status_map = {"pending": "⏳ قيد الانتظار", "accepted": "✅ مقبول وقيد التجهيز", "delivered": "🚗 تم التسليم والانتهاء", "rejected": "❌ مرفوض وملغي"}
+            
+            text = (
+                f"📄 <b>تفاصيل الطلب: #{order_id}</b>\n"
+                f"🏬 المتجر: {store.get('name')}\n"
+                f"📅 التاريخ: {order.get('time')}\n"
+                f"🏷️ الحالة الحالية: <b>{status_map.get(order.get('status'), 'غير معروف')}</b>\n"
+                f"━━━━━━━━━━━━━━━━━━\n"
+                f"👤 العميل: {order.get('customer_name')}\n"
+                f"📱 الهاتف: <code>{order.get('customer_phone')}</code>\n"
+                f"📍 العنوان/الموقع: {order.get('address')}\n"
+                f"🍽️ النوع: {order.get('order_type')}\n"
+                f"💳 الدفع: {order.get('payment_method')}\n"
+                f"━━━━━━━━━━━━━━━━━━\n<b>📦 المنتجات المطلوبة:</b>\n"
+            )
+            for pid, qty in order.get("items", {}).items():
+                p_info = store.get("products", {}).get(pid, {})
+                if p_info:
+                    text += f"▪️ {p_info['name']} × ({qty}) = <code>{format_price(p_info['price'] * qty)}</code>\n"
+            text += f"━━━━━━━━━━━━━━━━━━\n💵 <b>الإجمالي الكلي: {format_price(order.get('total'))}</b>"
+            
+            markup = types.InlineKeyboardMarkup(row_width=2)
+            if order.get("status") == "pending":
+                markup.add(
+                    types.InlineKeyboardButton("✅ قبول وتجهيز", callback_data=f"adm_acc|{store_id}|{order_id}"),
+                    types.InlineKeyboardButton("❌ رفض وإلغاء", callback_data=f"adm_rej|{store_id}|{order_id}")
+                )
+            elif order.get("status") == "accepted":
+                markup.add(
+                    types.InlineKeyboardButton("🚗 خرج للتوصيل", callback_data=f"adm_del|{store_id}|{order_id}"),
+                    types.InlineKeyboardButton("❌ رفض وإلغاء", callback_data=f"adm_rej|{store_id}|{order_id}")
+                )
+            markup.add(types.InlineKeyboardButton("🔙 العودة لقائمة الطلبات", callback_data=f"admin_manage_orders|{store_id}|0"))
+            
+            if order.get("receipt_photo"):
+                try:
+                    bot.delete_message(chat_id, msg_id)
+                except Exception:
+                    pass
+                bot.send_photo(chat_id, order.get("receipt_photo"), caption=text, reply_markup=markup)
+            else:
+                bot.edit_message_text(text, chat_id=chat_id, message_id=msg_id, reply_markup=markup)
+
+        elif data.startswith("export_sales_csv|"):
+            store_id = data.split("|")[1]
+            db = load_db()
+            store = db.get("stores", {}).get(store_id, {})
+            orders = [o for o in db.get("orders", {}).values() if o.get("store_id") == store_id]
+            
+            if not orders:
+                bot.answer_callback_query(call.id, "❌ لا توجد أي مبيعات أو طلبات لتصديرها لهذا المتجر بعد.", show_alert=True)
+                return
+                
+            bot.answer_callback_query(call.id, "⏳ جاري إنشاء تقرير المبيعات...")
+            
+            import csv
+            import io
+            
+            output = io.StringIO()
+            output.write('\ufeff')
+            writer = csv.writer(output, delimiter=',')
+            writer.writerow(['رقم الطلب', 'تاريخ الطلب', 'اسم الزبون', 'رقم الهاتف', 'العنوان والموقع', 'نوع الطلب', 'طريقة الدفع', 'الحالة', 'مجموع الحساب'])
+            
+            status_map = {"pending": "قيد الانتظار", "accepted": "قيد التجهيز", "delivered": "تم التسليم", "rejected": "مرفوض/ملغي", "cancelled": "ملغي من الزبون"}
+            for o in orders:
+                writer.writerow([
+                    o.get('id', ''),
+                    o.get('time', ''),
+                    o.get('customer_name', ''),
+                    o.get('customer_phone', ''),
+                    o.get('address', '').replace('\n', ' '),
+                    o.get('order_type', ''),
+                    o.get('payment_method', ''),
+                    status_map.get(o.get('status', ''), o.get('status', '')),
+                    f"{o.get('total', 0)} د.ع"
+                ])
+                
+            csv_data = output.getvalue()
+            output.close()
+            
+            file_bytes = csv_data.encode('utf-8-sig')
+            bio = io.BytesIO(file_bytes)
+            bio.name = f"sales_report_{store_id}.csv"
+            
+            import datetime
+            bot.send_document(
+                chat_id,
+                bio,
+                caption=f"📊 <b>تقرير مبيعات وطلبات متجر: {store.get('name')}</b>\n\nتاريخ التصدير: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            )
 
         elif data.startswith("promo_panel|"):
             store_id = data.split("|")[1]
