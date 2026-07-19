@@ -1031,6 +1031,37 @@ def send_admin_store_panel(chat_id, store_id, message_id=None):
             pass
     bot.send_message(chat_id, text, reply_markup=markup)
 
+def generate_and_send_qr_zip(chat_id, store_id, num):
+    try:
+        import zipfile
+        import io
+        import urllib.parse
+        import requests
+        
+        bot_info = bot.get_me()
+        bot_username = bot_info.username
+        
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+            for i in range(1, num + 1):
+                qr_data = f"https://t.me/{bot_username}?start=table_{i}"
+                api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={urllib.parse.quote(qr_data)}"
+                
+                res = requests.get(api_url, timeout=10)
+                if res.status_code == 200:
+                    zip_file.writestr(f"table_{i}.png", res.content)
+                else:
+                    raise Exception(f"Failed to generate QR for table {i}")
+                    
+        zip_buffer.seek(0)
+        bot.send_document(
+            chat_id, 
+            document=types.InputFile(zip_buffer, filename=f"qr_codes_tables_1_to_{num}.zip"),
+            caption=f"✅ <b>تم توليد وتجهيز باركودات لـ ({num}) طاولة بنجاح!</b>\n\n📁 يحتوي الملف المضغوط على صور الباركود لكل طاولة باسمها.\n🖨️ يمكنك طباعة الصور ولصقها على الطاولات مباشرة."
+        )
+    except Exception as e:
+        bot.send_message(chat_id, f"❌ حدث خطأ أثناء توليد الباركودات: {e}")
+
 def send_admin_settings_panel(chat_id, store_id, message_id=None):
     if not is_store_admin(chat_id, store_id):
         return
@@ -1065,6 +1096,10 @@ def send_admin_settings_panel(chat_id, store_id, message_id=None):
         markup.add(
             types.InlineKeyboardButton(f"🛵 نظام التوصيل: {del_status}", callback_data=f"aset_delmode|{store_id}"),
             types.InlineKeyboardButton(f"💰 تعديل أجور التوصيل ({format_price(store.get('delivery_fee', 0))})", callback_data=f"aset_delfee|{store_id}")
+        )
+    else:
+        markup.add(
+            types.InlineKeyboardButton("🖨️ توليد باركودات الطاولات (QR Codes)", callback_data=f"aset_genqrs|{store_id}")
         )
     markup.add(
         types.InlineKeyboardButton(f"📱 محفظة زين كاش ({store.get('wallet_number', 'غير محدد')[:12]})", callback_data=f"aset_wallet|{store_id}")
@@ -1873,6 +1908,16 @@ if bot:
                     bot.answer_callback_query(call.id, "✅ تم نقل وتصنيف المتجر للجناح المحدد بنجاح!", show_alert=True)
                 send_admin_settings_panel(chat_id, store_id, msg_id)
 
+        elif data.startswith("aset_genqrs|"):
+            store_id = data.split("|")[1]
+            set_user_state(chat_id, "waiting_num_tables", store_id)
+            bot.edit_message_text(
+                "🖨️ <b>توليد باركودات طاولات الكوفي الذكية</b>\n\n"
+                "يرجى كتابة عدد الطاولات المتوفرة في الكوفي الخاص بك (رقم بين 1 و 100):",
+                chat_id=chat_id, message_id=msg_id,
+                reply_markup=types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("❌ إلغاء وتراجع", callback_data=f"admin_settings|{store_id}"))
+            )
+
         elif data.startswith("aset_name|"):
             store_id = data.split("|")[1]
             set_user_state(chat_id, "waiting_store_name", store_id)
@@ -2404,6 +2449,18 @@ if bot:
         elif text_lower in ["/cancel", "إلغاء", "الغاء", "cancel"]:
             clear_user_state(chat_id)
             bot.send_message(chat_id, "✅ تم إلغاء العملية والعودة للقائمة الرئيسية.", reply_markup=types.InlineKeyboardMarkup().add(types.InlineKeyboardButton("👑 لوحة التحكم", callback_data="admin_main")))
+
+        elif state == "waiting_num_tables" and message.text and is_store_admin(chat_id, store_id):
+            try:
+                num = int(message.text.strip())
+                if num < 1 or num > 100:
+                    bot.send_message(chat_id, "❌ يرجى إدخال رقم صحيح بين 1 و 100.")
+                    return
+                clear_user_state(chat_id)
+                bot.send_message(chat_id, f"⏳ <b>جاري توليد ملف باركودات لـ {num} طاولة... يرجى الانتظار لحين تحميل وتجميع الملف.</b> 🚀")
+                threading.Thread(target=generate_and_send_qr_zip, args=(chat_id, store_id, num)).start()
+            except ValueError:
+                bot.send_message(chat_id, "❌ يرجى إرسال رقم صحيح فقط (مثال: 25).")
 
         elif state == "waiting_cat_add" and message.text and is_store_admin(chat_id, store_id):
             db = load_db()
